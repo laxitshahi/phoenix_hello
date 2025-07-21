@@ -1,6 +1,7 @@
 defmodule HelloWeb.Router do
-  use HelloWeb, :router
+ use HelloWeb, :router
 
+  # pipeline allows plugs to be applied at particular routes
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -8,6 +9,7 @@ defmodule HelloWeb.Router do
     plug :put_root_layout, html: {HelloWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug HelloWeb.Plugs.Locale, "en"
   end
 
   pipeline :api do
@@ -15,6 +17,7 @@ defmodule HelloWeb.Router do
   end
 
   scope "/", HelloWeb do
+    # invoke all plus in browser pipeline above
     pipe_through :browser
 
     get "/", PageController, :home

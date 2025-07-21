@@ -26,7 +26,7 @@ defmodule HelloWeb.Endpoint do
     gzip: false,
     only: HelloWeb.static_paths()
 
-  # Code reloading can be explicitly enabled under the
+  # Code reloading (dev only) can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
   if code_reloading? do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
@@ -42,6 +42,7 @@ defmodule HelloWeb.Endpoint do
   plug Plug.RequestId
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
+  # parse request body if urlencoded, multipart, or json 
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
@@ -49,6 +50,23 @@ defmodule HelloWeb.Endpoint do
 
   plug Plug.MethodOverride
   plug Plug.Head
+  # ONLY sets up session management, so fetch_session/2 must be explicitly called before using the session
   plug Plug.Session, @session_options
   plug HelloWeb.Router
+
+  # plugs are kinds like middleware as they are adapters 
+  # that sit between "connections" rather than
+  # a req/res cycle like normal HTTP middleware
+  plug :introspect
+  # between each page, this will run and output in console
+  # PLUGS CAN BE FUNCTIONS OR MODULES
+  def introspect(conn, _opts) do
+    IO.puts("""
+    Verb (get,post...): #{inspect(conn.method)}
+    Host (ex.localhost): #{inspect(conn.host)}
+    Headers: #{inspect(conn.req_headers)} 
+    """)
+    
+    conn
+  end
 end
