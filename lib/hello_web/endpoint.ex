@@ -1,3 +1,4 @@
+# This runs first and on all endpoints?
 defmodule HelloWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :hello
 
