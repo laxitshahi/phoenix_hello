@@ -20,10 +20,36 @@ defmodule HelloWeb.Router do
     # invoke all plus in browser pipeline above
     pipe_through :browser
 
+    # get,post,patch,connect,options... are all macros
+
+    # Using macros for routes allow us to make
+    # the use of routes, faster and safer.
+    # faster -> optmized by erlang VM
+    # safer -> meta data for Phoenix.VerifiedRoutes is implemented
     get "/", PageController, :home
     get "/hello", HelloController, :index
     get "/hello/:messenger", HelloController, :show
+
+    # We can also define resources to "generate"
+    # a number of different routes
+    # You can specific the TYPE of route using 
+    # the respective function definition
+    resources "/people", PeopleController, only: [:index]
+    resources "/comments", CommentController, except: [:delete]
+
+    # You can also created nested routes for 1:M relation ships
+    resources "/users", UserController do
+      resources "/posts", PostController
+    end
   end
+  
+  # You can "scope" apis to have a common start
+  scope "/admin", HelloWeb.Admin do
+    pipe_through :browser
+    
+    resources "/reviews", ReviewController
+  end
+
 
   # Other scopes may use custom stacks.
   # scope "/api", HelloWeb do
