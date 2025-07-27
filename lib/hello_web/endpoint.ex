@@ -61,11 +61,11 @@ defmodule HelloWeb.Endpoint do
   # between each page, this will run and output in console
   # PLUGS CAN BE FUNCTIONS OR MODULES
   def introspect(conn, _opts) do
-    IO.puts("""
-    Verb (get,post...): #{inspect(conn.method)}
-    Host (ex.localhost): #{inspect(conn.host)}
-    Headers: #{inspect(conn.req_headers)} 
-    """)
+    # IO.puts("""
+    # Verb (get,post...): #{inspect(conn.method)}
+    # Host (ex.localhost): #{inspect(conn.host)}
+    # Headers: #{inspect(conn.req_headers)} 
+    # """)
     
     conn
   end

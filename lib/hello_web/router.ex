@@ -3,10 +3,11 @@ defmodule HelloWeb.Router do
 
   # pipeline allows plugs to be applied at particular routes
   pipeline :browser do
-    plug :accepts, ["html"]
+    plug :accepts, ["html", "json"]
     plug :fetch_session
-    plug :fetch_live_flash
-    plug :put_root_layout, html: {HelloWeb.Layouts, :root}
+    plug :fetch_live_flash # liveview flash messages
+    plug :put_root_layout, html: {HelloWeb.Layouts, :root} # renders root and app layouts
+    # CSRF protection
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug HelloWeb.Plugs.Locale, "en"
@@ -27,6 +28,7 @@ defmodule HelloWeb.Router do
     # faster -> optmized by erlang VM
     # safer -> meta data for Phoenix.VerifiedRoutes is implemented
     get "/", PageController, :home
+    get "/redirect_test", PageController, :redirect_test
     get "/hello", HelloController, :index
     get "/hello/:messenger", HelloController, :show
 
@@ -34,10 +36,13 @@ defmodule HelloWeb.Router do
     # a number of different routes
     # You can specific the TYPE of route using 
     # the respective function definition
+
+    #== NOTE: DNE (used for routing section) ==#
     resources "/people", PeopleController, only: [:index]
     resources "/comments", CommentController, except: [:delete]
 
     # You can also created nested routes for 1:M relation ships
+    #== NOTE: DNE (used for routing section) ==#
     resources "/users", UserController do
       resources "/posts", PostController
     end
@@ -47,6 +52,7 @@ defmodule HelloWeb.Router do
   scope "/admin", HelloWeb.Admin do
     pipe_through :browser
     
+    #== NOTE: DNE (used for routing section) ==#
     resources "/reviews", ReviewController
   end
 
